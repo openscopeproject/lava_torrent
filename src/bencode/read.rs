@@ -96,16 +96,19 @@ impl BencodeElem {
         }
         bytes.advance(1); // consume the postfix
 
+        // Sorted check is disabled because it is unnecessary. Some trackers
+        // generated malformed torrents that most clients can handle anyway.
+
         // check that the dictionary is sorted
-        for (i, j) in (1..entries.len()).enumerate() {
-            let ((k1, _), (k2, _)) = (&entries[i], &entries[j]);
-            // "sorted as raw strings, not alphanumerics"
-            if k1 > k2 {
-                return Err(LavaTorrentError::MalformedBencode(Cow::Borrowed(
-                    "A dictionary is not properly sorted.",
-                )));
-            }
-        }
+        // for (i, j) in (1..entries.len()).enumerate() {
+        //     let ((k1, _), (k2, _)) = (&entries[i], &entries[j]);
+        //     // "sorted as raw strings, not alphanumerics"
+        //     if k1 > k2 {
+        //         return Err(LavaTorrentError::MalformedBencode(Cow::Borrowed(
+        //             "A dictionary is not properly sorted.",
+        //         )));
+        //     }
+        // }
 
         // convert to Dictionary if possible
         let mut entries2 = Vec::new();
@@ -494,16 +497,18 @@ mod bencode_elem_read_tests {
         }
     }
 
-    #[test]
-    fn decode_dictionary_not_sorted() {
-        let bytes = "3:zoo3:moo4:spam4:eggse".as_bytes();
-        match BencodeElem::decode_dictionary(&mut ByteBuffer::new(bytes)) {
-            Err(LavaTorrentError::MalformedBencode(m)) => {
-                assert_eq!(m, "A dictionary is not properly sorted.");
-            }
-            _ => panic!(),
-        }
-    }
+    // Sorted check disabled
+
+    // #[test]
+    // fn decode_dictionary_not_sorted() {
+    //     let bytes = "3:zoo3:moo4:spam4:eggse".as_bytes();
+    //     match BencodeElem::decode_dictionary(&mut ByteBuffer::new(bytes)) {
+    //         Err(LavaTorrentError::MalformedBencode(m)) => {
+    //             assert_eq!(m, "A dictionary is not properly sorted.");
+    //         }
+    //         _ => panic!(),
+    //     }
+    // }
 
     #[test]
     fn decode_raw_dictionary_ok() {
