@@ -1,5 +1,5 @@
 use super::*;
-use crate::bencode::BencodeElem;
+use crate::bencode::{BencodeElem, ReadLimit};
 use crate::util;
 use std::borrow::Cow;
 use std::collections::HashMap;
@@ -111,7 +111,7 @@ impl Torrent {
     where
         B: AsRef<[u8]>,
     {
-        Self::from_parsed(BencodeElem::from_bytes(bytes)?)?.validate()
+        Self::from_parsed(BencodeElem::from_bytes(bytes, ReadLimit::Limit(1))?)?.validate()
     }
 
     /// Parse the content of the file at `path` and return the extracted `Torrent`.
@@ -122,7 +122,7 @@ impl Torrent {
     where
         P: AsRef<Path>,
     {
-        Self::from_parsed(BencodeElem::from_file(path)?)?.validate()
+        Self::from_parsed(BencodeElem::from_file(path, ReadLimit::Limit(1))?)?.validate()
     }
 
     // @note: Most of validation is done when bdecoding and parsing torrent,

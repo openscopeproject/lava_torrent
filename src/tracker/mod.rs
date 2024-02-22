@@ -4,7 +4,7 @@
 //! with trackers. Users will have to send requests themselves and
 //! pass the received responses to `lava_torrent` for parsing.
 
-use crate::bencode::BencodeElem;
+use crate::bencode::{BencodeElem, ReadLimit};
 use crate::torrent::v1::{Dictionary, Integer};
 use crate::LavaTorrentError;
 use itertools::Itertools;
@@ -198,7 +198,7 @@ impl TrackerResponse {
     where
         B: AsRef<[u8]>,
     {
-        let mut parsed = BencodeElem::from_bytes(bytes)?;
+        let mut parsed = BencodeElem::from_bytes(bytes, ReadLimit::NoLimit)?;
         if parsed.len() != 1 {
             return Err(LavaTorrentError::MalformedTorrent(Cow::Owned(format!(
                 "Tracker response should contain 1 and only 1 top-level element, {} found.",
@@ -408,7 +408,7 @@ impl TrackerScrapeResponse {
     where
         B: AsRef<[u8]>,
     {
-        let mut parsed = BencodeElem::from_bytes(bytes)?;
+        let mut parsed = BencodeElem::from_bytes(bytes, ReadLimit::NoLimit)?;
         if parsed.len() != 1 {
             return Err(LavaTorrentError::MalformedTorrent(Cow::Owned(format!(
                 "Tracker scrape response should contain 1 and only 1 top-level element, {} found.",

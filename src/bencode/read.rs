@@ -18,7 +18,7 @@ impl BencodeElem {
     /// If `bytes` contains any malformed bencode, or if any other
     /// error is encountered (e.g. `IOError`), then `Err(error)`
     /// will be returned.
-    pub fn from_bytes<B>(bytes: B) -> Result<Vec<BencodeElem>, LavaTorrentError>
+    pub fn from_bytes<B>(bytes: B, limit: ReadLimit) -> Result<Vec<BencodeElem>, LavaTorrentError>
     where
         B: AsRef<[u8]>,
     {
@@ -28,6 +28,11 @@ impl BencodeElem {
         while !bytes.is_empty() {
             let element = BencodeElem::parse(&mut bytes)?;
             elements.push(element);
+            if let ReadLimit::Limit(lim) = limit {
+                if lim == elements.len() {
+                    break;
+                }
+            }
         }
 
         Ok(elements)
@@ -41,7 +46,7 @@ impl BencodeElem {
     /// If the file at `path` contains any malformed bencode, or if any other
     /// error is encountered (e.g. `IOError`), then `Err(error)`
     /// will be returned.
-    pub fn from_file<P>(path: P) -> Result<Vec<BencodeElem>, LavaTorrentError>
+    pub fn from_file<P>(path: P, limit: ReadLimit) -> Result<Vec<BencodeElem>, LavaTorrentError>
     where
         P: AsRef<Path>,
     {
@@ -49,7 +54,7 @@ impl BencodeElem {
         let mut bytes = Vec::new();
 
         BufReader::new(file).read_to_end(&mut bytes)?;
-        Self::from_bytes(bytes)
+        Self::from_bytes(bytes, limit)
     }
 
     fn peek_byte(bytes: &mut ByteBuffer) -> Result<u8, LavaTorrentError> {

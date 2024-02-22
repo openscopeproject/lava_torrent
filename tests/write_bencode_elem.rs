@@ -1,7 +1,7 @@
 extern crate lava_torrent;
 extern crate rand;
 
-use lava_torrent::bencode::BencodeElem;
+use lava_torrent::bencode::{BencodeElem, ReadLimit};
 use rand::Rng;
 use std::collections::HashMap;
 use std::iter::FromIterator;
@@ -18,7 +18,7 @@ fn bencode_elem_write_string_to_file_ok() {
     let output = rand_file_name();
 
     original.write_into_file(&output).unwrap();
-    let duplicate = BencodeElem::from_file(&output).unwrap();
+    let duplicate = BencodeElem::from_file(&output, ReadLimit::NoLimit).unwrap();
     assert_eq!(duplicate.len(), 1);
     assert_eq!(original, duplicate[0]);
 }
@@ -29,7 +29,7 @@ fn bencode_elem_write_bytes_to_file_ok() {
     let output = rand_file_name();
 
     original.write_into_file(&output).unwrap();
-    let duplicate = BencodeElem::from_file(&output).unwrap();
+    let duplicate = BencodeElem::from_file(&output, ReadLimit::NoLimit).unwrap();
     assert_eq!(duplicate.len(), 1);
     assert_eq!(original, duplicate[0]);
 }
@@ -40,7 +40,7 @@ fn bencode_elem_write_integer_to_file_ok() {
     let output = rand_file_name();
 
     original.write_into_file(&output).unwrap();
-    let duplicate = BencodeElem::from_file(&output).unwrap();
+    let duplicate = BencodeElem::from_file(&output, ReadLimit::NoLimit).unwrap();
     assert_eq!(duplicate.len(), 1);
     assert_eq!(original, duplicate[0]);
 }
@@ -54,7 +54,7 @@ fn bencode_elem_write_list_to_file_ok() {
     let output = rand_file_name();
 
     original.write_into_file(&output).unwrap();
-    let duplicate = BencodeElem::from_file(&output).unwrap();
+    let duplicate = BencodeElem::from_file(&output, ReadLimit::NoLimit).unwrap();
     assert_eq!(duplicate.len(), 1);
     assert_eq!(original, duplicate[0]);
 }
@@ -71,7 +71,7 @@ fn bencode_elem_write_dictionary_to_file_ok() {
     let output = rand_file_name();
 
     original.write_into_file(&output).unwrap();
-    let duplicate = BencodeElem::from_file(&output).unwrap();
+    let duplicate = BencodeElem::from_file(&output, ReadLimit::NoLimit).unwrap();
     assert_eq!(duplicate.len(), 1);
     assert_eq!(original, duplicate[0]);
 }

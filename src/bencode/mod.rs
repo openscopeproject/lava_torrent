@@ -23,6 +23,13 @@ const INTEGER_PREFIX: u8 = b'i';
 const INTEGER_POSTFIX: u8 = b'e';
 const STRING_DELIMITER: u8 = b':';
 
+#[derive(Default)]
+pub enum ReadLimit {
+    #[default]
+    NoLimit,
+    Limit(usize),
+}
+
 /// Represent a single bencode element.
 ///
 /// There are 4 variants in the [spec], but this enum has 6 variants. The extra variants are
