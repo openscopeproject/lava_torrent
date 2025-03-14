@@ -108,6 +108,7 @@ extern crate sha1;
 extern crate thiserror;
 
 pub(crate) mod util;
+pub use util::list_dir;
 #[macro_use]
 pub mod bencode;
 pub mod torrent;

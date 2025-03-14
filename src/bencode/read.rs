@@ -127,9 +127,7 @@ impl BencodeElem {
                 }
             }
         }
-        Ok(BencodeElem::Dictionary(HashMap::from_iter(
-            entries2.into_iter(),
-        )))
+        Ok(BencodeElem::Dictionary(HashMap::from_iter(entries2)))
     }
 
     fn decode_list(bytes: &mut ByteBuffer) -> Result<BencodeElem, LavaTorrentError> {

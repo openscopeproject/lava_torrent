@@ -45,7 +45,7 @@ pub(crate) fn u64_to_i64(src: u64) -> Result<i64, LavaTorrentError> {
 // *nix hidden files/dirs are ignored
 //
 // returned vec is sorted by path
-pub(crate) fn list_dir<P>(path: P) -> Result<Vec<(PathBuf, u64)>, LavaTorrentError>
+pub fn list_dir<P>(path: P) -> Result<Vec<(PathBuf, u64)>, LavaTorrentError>
 where
     P: AsRef<Path>,
 {
@@ -145,7 +145,7 @@ mod util_tests {
     fn list_dir_ok() {
         assert_eq!(
             list_dir("tests/files").unwrap(),
-            vec![
+            [
                 "tests/files/byte_sequence",
                 "tests/files/symlink",
                 "tests/files/tails-amd64-3.6.1.torrent",
@@ -163,7 +163,7 @@ mod util_tests {
     fn list_dir_with_subdir() {
         assert_eq!(
             list_dir("src/torrent").unwrap(),
-            vec![
+            [
                 "src/torrent/mod.rs",
                 "src/torrent/v1/build.rs",
                 "src/torrent/v1/mod.rs",
