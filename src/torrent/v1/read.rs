@@ -50,7 +50,13 @@ impl File {
     fn extract_file_path(
         dict: &mut HashMap<String, BencodeElem>,
     ) -> Result<PathBuf, LavaTorrentError> {
-        match dict.remove("path") {
+        let mut key = "path.utf-8";
+        if !dict.contains_key(key) {
+            key = "path";
+        } else {
+            dict.remove("path");
+        }
+        match dict.remove(key) {
             Some(BencodeElem::List(list)) => {
                 if list.is_empty() {
                     return Err(LavaTorrentError::MalformedTorrent(Cow::Borrowed(
@@ -334,7 +340,13 @@ impl Torrent {
     }
 
     fn extract_name(dict: &mut HashMap<String, BencodeElem>) -> Result<String, LavaTorrentError> {
-        match dict.remove("name") {
+        let mut key = "name.utf-8";
+        if !dict.contains_key(key) {
+            key = "name";
+        } else {
+            dict.remove("name");
+        }
+        match dict.remove(key) {
             Some(BencodeElem::String(name)) => Ok(name),
             Some(_) => {
                 return Err(LavaTorrentError::MalformedTorrent(Cow::Borrowed(
